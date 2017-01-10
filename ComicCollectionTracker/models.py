@@ -1,11 +1,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
-
-
-class User(models.Model):
-    email = models.CharField(max_length=200)
-    name = models.CharField(max_length=100)
+from django.contrib.auth.models import User
 
 
 class Collection(models.Model):
