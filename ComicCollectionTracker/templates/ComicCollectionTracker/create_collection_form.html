@@ -3,6 +3,6 @@
 {% block title_addon %}{% endblock %}
 
 {% block content %}
-    <p>Hello, {{ user.name }}!</p>
+    <p>Hello, {{ request.user.first_name }}!</p>
 
 {% endblock %}
