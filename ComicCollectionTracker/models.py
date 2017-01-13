@@ -9,6 +9,16 @@ class Collection(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     is_default = models.BooleanField(default=False)  # True if this Collection is the default to be displayed for user
 
+    def __str__(self):
+        return self.name
+
+    # TODO: add sort method
+
+
+class DefaultCollection(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    collection = models.ForeignKey(Collection, on_delete=models.CASCADE)
+
 
 class Issue(models.Model):
     # metadata
@@ -27,3 +37,8 @@ class Issue(models.Model):
     own_digital = models.BooleanField(default=False)
     have_read = models.BooleanField(default=False)
     collection_comment = models.TextField(default=None)
+
+    def __str__(self):
+        return "%s #%s" % (self.publication, self.number)
+
+    # TODO: add sort method

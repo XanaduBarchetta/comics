@@ -1,13 +1,20 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
+from django.views.generic import ListView
 
-from .models import User, Collection
+from .models import Collection, Issue
 
 
+@login_required
 def index(request):
-    collection_list = Collection.objects.all()  # TODO: replace with real query
-    context = {
-        'collection_list': collection_list,
-    }
-    if not collection_list:
-        return render(request, 'ComicCollectionTracker/create_collection_form.html', context)
+    if Collection.objects.filter(user=request.user, is_default=True).exists():
+        # Prompt the user to create their first collection
+        return render(request, 'ComicCollectionTracker/create_collection_form.html')
+    else:
+        return render(request, 'ComicCollectionTracker/index.html')
+
+
+@login_required
+class IssueList(ListView):
+    model = Issue
