@@ -4,5 +4,5 @@ from ComicCollectionTracker.views import IssueList
 
 
 urlpatterns = [
-    url(r'^$', IssueList, name='collection'),
+    url(r'^$', IssueList.as_view()),
 ]

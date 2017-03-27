@@ -6,5 +6,13 @@
 
 {% block content %}
     <p>Hello, {{ request.user.first_name }}!</p>
-
+    {% if issues %}
+        <ul>
+            {% for issue in issues %}
+                <li>{{ issue }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>You have no issues tracked, yet!</p>
+    {% endif %}
 {% endblock %}
