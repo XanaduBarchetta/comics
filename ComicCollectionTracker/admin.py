@@ -1,7 +1,5 @@
 from django.contrib import admin
 
-from .models import Collection, Issue, DefaultCollection
+from .models import Issue
 
-admin.site.register(Collection)
 admin.site.register(Issue)
-admin.site.register(DefaultCollection)

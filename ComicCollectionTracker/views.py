@@ -3,18 +3,9 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView
 
-from .models import Collection, Issue
+from .models import Issue
 
 
 @login_required
-def index(request):
-    if Collection.objects.filter(user=request.user, is_default=True).exists():
-        # Prompt the user to create their first collection
-        return render(request, 'ComicCollectionTracker/create_collection_form.html')
-    else:
-        return render(request, 'ComicCollectionTracker/index.html')
-
-
-@login_required
-class IssueList(ListView):
-    model = Issue
+def IssueList(request):
+    return render(request, 'ComicCollectionTracker/index.html')
