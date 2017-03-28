@@ -6,9 +6,12 @@
 
 {% block content %}
     <p>Hello, {{ request.user.first_name }}!</p>
-    {% if issues %}
+    <ul>
+        <li><a href="issue/add/">Add an issue</a></li>
+    </ul>
+    {% if issues_list %}
         <ul>
-            {% for issue in issues %}
+            {% for issue in issues_list %}
                 <li>{{ issue }}</li>
             {% endfor %}
         </ul>

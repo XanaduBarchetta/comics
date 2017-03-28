@@ -123,3 +123,8 @@ STATIC_URL = '/static/'
 # Account URLs
 LOGIN_URL = "/login/"
 LOGOUT_REDIRECT_URL = "/login/"
+
+# Comicvine settings
+COMICVINE_API_KEY = str(os.environ.get('COMICVINE_API_KEY', 'not_found'))
+COMICVINE_API_URL = 'https://comicvine.gamespot.com/api/'
+COMICVINE_API_ISSUE_FILTERS = ''  # TODO: update with list of filters for API calls
