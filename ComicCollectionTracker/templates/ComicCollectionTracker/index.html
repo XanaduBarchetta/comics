@@ -7,7 +7,14 @@
 {% block content %}
     <p>Hello, {{ request.user.first_name }}!</p>
     <ul>
-        <li><a href="issue/add/">Add an issue</a></li>
+        <li><form action="issue/add/" method="get">
+            {{ form_issue }}
+            <input type="submit" value="Add New Issue" />
+        </form></li>
+{#        <li><form action="publication/add/" method="get">#}
+{#            {{ form_publication }}#}
+{#            <input type="submit" value="Add All From Publication" />#}
+{#        </form></li>#}
     </ul>
     {% if issues_list %}
         <ul>

@@ -127,4 +127,11 @@ LOGOUT_REDIRECT_URL = "/login/"
 # Comicvine settings
 COMICVINE_API_KEY = str(os.environ.get('COMICVINE_API_KEY', 'not_found'))
 COMICVINE_API_URL = 'https://comicvine.gamespot.com/api/'
-COMICVINE_API_ISSUE_FILTERS = ''  # TODO: update with list of filters for API calls
+COMICVINE_API_ISSUE_URL = COMICVINE_API_URL + 'issue/4000-'
+COMICVINE_API_ISSUE_FILTERS = [
+    'site_detail_url',  # maps to Issue.comicvine_url
+    'volume',           # maps to Issue.publication
+    'issue_number',     # maps to Issue.number
+    'image',            # maps to Issue.cover_url
+    'store_date',       # maps to Issue.on_sale_date
+]

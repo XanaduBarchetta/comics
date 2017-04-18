@@ -1,0 +1,12 @@
+{% extends "ComicCollectionTracker/base.html" %}
+
+{% block title_addon %}New Issue{% endblock %}
+
+{% block header %}New Issue From Comicvine{% endblock %}
+
+{% block content %}
+<form action="issue/add/" method="post">
+    {{ form.as_p }}
+    <input type="submit" value="Confirm and Add" />
+</form>
+{% endblock %}
