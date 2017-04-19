@@ -5,4 +5,4 @@ def get_comicvine_issue_url(comicvine_id):
     url = settings.COMICVINE_API_ISSUE_URL + str(comicvine_id) + '/?api_key=' + settings.COMICVINE_API_KEY
     if settings.COMICVINE_API_ISSUE_FILTERS:
         url += '&field_list=' + ','.join(settings.COMICVINE_API_ISSUE_FILTERS)
-    return url
+    return url + '&format=json'

@@ -1,5 +1,6 @@
 import urllib2
 from xml.dom import minidom
+import json
 
 import utils
 
@@ -45,20 +46,51 @@ class ComicvineIssueView(View):
         comicvine_id = request.GET.get('comicvine_id', '0')
         url = utils.get_comicvine_issue_url(comicvine_id)
         comicvine_content = urllib2.urlopen(url)
-        xml_tree = minidom.parse(comicvine_content)
+        comic_data = json.loads(comicvine_content.read())
         comicvine_content.close()
+
+        # TODO: Handle errors
+
+        # Create dictionary from JSON
 
         form = IssueAddForm(initial={
             'comicvine_id': comicvine_id,
-            'comicvine_url': xml_tree.getElementsByTagName('site_detail_url')[0].firstChild.nodeValue,
-            # 'publication',
-            # 'number',
-            # 'cover',
-            # 'cover_url',
-            # 'on_sale_date',
+            'comicvine_url': comic_data['results']['site_detail_url'],
+            'publication': comic_data['results']['volume']['name'],
+            'number': comic_data['results']['issue_number'],
+            'cover_url': comic_data['results']['image']['super_url'],
+            'on_sale_date': comic_data['results']['store_date'],
         })
 
         return render(request, 'ComicCollectionTracker/comicvine_issue.html',
                       {
                           'form': form
                       })
+# {
+#     "error":"OK",
+#     "limit":1,
+#     "offset":0,
+#     "number_of_page_results":1,
+#     "number_of_total_results":1,
+#     "status_code":1,
+#     "results":{
+#         "image":{
+#             "icon_url":"https:\/\/comicvine.gamespot.com\/api\/image\/square_avatar\/2556504-smann_cv1.jpeg",
+#             "medium_url":"https:\/\/comicvine.gamespot.com\/api\/image\/scale_medium\/2556504-smann_cv1.jpeg",
+#             "screen_url":"https:\/\/comicvine.gamespot.com\/api\/image\/screen_medium\/2556504-smann_cv1.jpeg",
+#             "small_url":"https:\/\/comicvine.gamespot.com\/api\/image\/scale_small\/2556504-smann_cv1.jpeg",
+#             "super_url":"https:\/\/comicvine.gamespot.com\/api\/image\/scale_large\/2556504-smann_cv1.jpeg",
+#             "thumb_url":"https:\/\/comicvine.gamespot.com\/api\/image\/scale_avatar\/2556504-smann_cv1.jpeg",
+#             "tiny_url":"https:\/\/comicvine.gamespot.com\/api\/image\/square_mini\/2556504-smann_cv1.jpeg"
+#         },
+#         "issue_number":"1",
+#         "site_detail_url":"https:\/\/comicvine.gamespot.com\/superman-annual-1-alien-extinction\/4000-354034\/",
+#         "volume":{
+#             "api_detail_url":"https:\/\/comicvine.gamespot.com\/api\/volume\/4050-51617\/",
+#             "id":51617,
+#             "name":"Superman Annual",
+#             "site_detail_url":"https:\/\/comicvine.gamespot.com\/superman-annual\/4050-51617\/"
+#         }
+#     },
+#     "version":"1.0"
+# }
