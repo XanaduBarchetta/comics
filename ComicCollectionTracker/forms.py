@@ -30,9 +30,15 @@ class IssueAddForm(forms.ModelForm):
     
     def __init__(self, *args, **kwargs):
         super(IssueAddForm, self).__init__(*args, **kwargs)
+
+        # Change widget sizes
         # TODO: maybe handle these things with javascript?
         self.fields['comicvine_url'].widget.attrs['size'] = 100
         self.fields['publication'].widget.attrs['size'] = 50
         self.fields['printing'].widget.attrs['size'] = 4
         self.fields['cover'].widget.attrs['size'] = 4
         self.fields['cover_url'].widget.attrs['size'] = 100
+
+        # Change required fields
+        self.fields['issue_comment'].required = False
+        self.fields['collection_comment'].required = False

@@ -1,16 +1,20 @@
+# Python libraries
 import urllib2
-from xml.dom import minidom
 import json
 
+# Project libraries
 import utils
 
-from django.shortcuts import render
-from django.http import HttpResponse
+# Django libraries
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
+from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views.generic import ListView, DetailView
 from django.views import View
 
+# Models and forms
 from .models import Issue
 from .forms import ComicvineIssueForm, IssueAddForm
 
@@ -66,31 +70,16 @@ class ComicvineIssueView(View):
                       {
                           'form': form
                       })
-# {
-#     "error":"OK",
-#     "limit":1,
-#     "offset":0,
-#     "number_of_page_results":1,
-#     "number_of_total_results":1,
-#     "status_code":1,
-#     "results":{
-#         "image":{
-#             "icon_url":"https:\/\/comicvine.gamespot.com\/api\/image\/square_avatar\/2556504-smann_cv1.jpeg",
-#             "medium_url":"https:\/\/comicvine.gamespot.com\/api\/image\/scale_medium\/2556504-smann_cv1.jpeg",
-#             "screen_url":"https:\/\/comicvine.gamespot.com\/api\/image\/screen_medium\/2556504-smann_cv1.jpeg",
-#             "small_url":"https:\/\/comicvine.gamespot.com\/api\/image\/scale_small\/2556504-smann_cv1.jpeg",
-#             "super_url":"https:\/\/comicvine.gamespot.com\/api\/image\/scale_large\/2556504-smann_cv1.jpeg",
-#             "thumb_url":"https:\/\/comicvine.gamespot.com\/api\/image\/scale_avatar\/2556504-smann_cv1.jpeg",
-#             "tiny_url":"https:\/\/comicvine.gamespot.com\/api\/image\/square_mini\/2556504-smann_cv1.jpeg"
-#         },
-#         "issue_number":"1",
-#         "site_detail_url":"https:\/\/comicvine.gamespot.com\/superman-annual-1-alien-extinction\/4000-354034\/",
-#         "volume":{
-#             "api_detail_url":"https:\/\/comicvine.gamespot.com\/api\/volume\/4050-51617\/",
-#             "id":51617,
-#             "name":"Superman Annual",
-#             "site_detail_url":"https:\/\/comicvine.gamespot.com\/superman-annual\/4050-51617\/"
-#         }
-#     },
-#     "version":"1.0"
-# }
+
+    def post(self, request):
+        form = IssueAddForm(request.POST)
+        if form.is_valid():
+            new_issue = form.save(commit=False)
+            new_issue.user = request.user  # Attach this new issue to the current user
+            new_issue.save()
+            return HttpResponseRedirect(reverse('collection-index'))
+        else:
+            return render(request, 'ComicCollectionTracker/comicvine_issue.html',
+                          {
+                              'form': form
+                          })

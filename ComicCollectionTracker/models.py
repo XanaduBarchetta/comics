@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 class Issue(models.Model):
     # metadata
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    comicvine_id = models.IntegerField()
+    comicvine_id = models.IntegerField()  # TODO: make this a unique field?
     comicvine_url = models.CharField(max_length=500, default=None)
     # issue data
     publication = models.CharField(max_length=300)  # The title of the series, e.g., Superman, Detective Comics, etc.
