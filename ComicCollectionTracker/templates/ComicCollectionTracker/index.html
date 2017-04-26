@@ -1,0 +1,28 @@
+{% extends "ComicCollectionTracker/base.html" %}
+
+{% block title_addon %}Home{% endblock %}
+
+{% block header %}Home{% endblock %}
+
+{% block content %}
+    <p>Hello, {{ request.user.first_name }}!</p>
+    <ul>
+        <li><form action="issue/add/" method="get">
+            {{ form_issue }}
+            <input type="submit" value="Add New Issue" />
+        </form></li>
+{#        <li><form action="publication/add/" method="get">#}
+{#            {{ form_publication }}#}
+{#            <input type="submit" value="Add All From Publication" />#}
+{#        </form></li>#}
+    </ul>
+    {% if issues_list %}
+        <ul>
+            {% for issue in issues_list %}
+                <li>{{ issue }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>You have no issues tracked, yet!</p>
+    {% endif %}
+{% endblock %}

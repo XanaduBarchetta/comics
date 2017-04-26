@@ -55,8 +55,7 @@ ROOT_URLCONF = 'comics.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')]
-        ,
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -107,7 +106,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'EST'
 
 USE_I18N = True
 
@@ -120,3 +119,19 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Account URLs
+LOGIN_URL = "/login/"
+LOGOUT_REDIRECT_URL = "/login/"
+
+# Comicvine settings
+COMICVINE_API_KEY = str(os.environ.get('COMICVINE_API_KEY', 'not_found'))
+COMICVINE_API_URL = 'https://comicvine.gamespot.com/api/'
+COMICVINE_API_ISSUE_URL = COMICVINE_API_URL + 'issue/4000-'
+COMICVINE_API_ISSUE_FILTERS = [
+    'site_detail_url',  # maps to Issue.comicvine_url
+    'volume',           # maps to Issue.publication
+    'issue_number',     # maps to Issue.number
+    'image',            # maps to Issue.cover_url
+    'store_date',       # maps to Issue.on_sale_date
+]

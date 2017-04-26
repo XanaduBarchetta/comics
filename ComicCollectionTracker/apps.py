@@ -5,3 +5,4 @@ from django.apps import AppConfig
 
 class ComiccollectiontrackerConfig(AppConfig):
     name = 'ComicCollectionTracker'
+    verbose_name = "Comic Collection Tracker"
