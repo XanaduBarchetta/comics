@@ -1,11 +1,13 @@
 # Python libraries
 import urllib2
 import json
+import logging
 
 # Project libraries
 import utils
 
 # Django libraries
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
