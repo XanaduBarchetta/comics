@@ -135,3 +135,37 @@ COMICVINE_API_ISSUE_FILTERS = [
     'image',            # maps to Issue.cover_url
     'store_date',       # maps to Issue.on_sale_date
 ]
+
+# Log settings
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'standard': {
+            'format': "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
+            'datefmt': "%d/%b/%Y %H:%M:%S"
+        },
+    },
+    'handlers': {
+        'logfile': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': BASE_DIR + "/logfile",
+            'maxBytes': 50000,
+            'backupCount': 2,
+            'formatter': 'standard',
+        },
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'standard',
+        },
+    },
+    'loggers': {
+        'ComicCollectionTracker': {
+            'handlers': ['console', 'logfile'],
+            'level': 'DEBUG',
+        },
+    },
+}
+LOGGER_NAME = 'ComicCollectionTracker'
