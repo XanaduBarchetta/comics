@@ -1,0 +1,6 @@
+/* issue_detail.html */
+
+table#issue-detail-table tr th {
+    text-align: center;
+    background-color: lightsteelblue;
+}

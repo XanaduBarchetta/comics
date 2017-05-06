@@ -7,7 +7,7 @@
 {% block content %}
     <p>Hello, {{ request.user.first_name }}!</p>
     <ul>
-        <li><form action="issue/add/" method="get">
+        <li><form action="{% url 'add-issue' %}" method="get">
             {{ form_issue }}
             <input type="submit" value="Add New Issue" />
         </form></li>
@@ -17,11 +17,37 @@
 {#        </form></li>#}
     </ul>
     {% if issues_list %}
-        <ul>
-            {% for issue in issues_list %}
-                <li>{{ issue }}</li>
-            {% endfor %}
-        </ul>
+        <table>
+            <thead>
+                <tr>
+                    <th>Issue</th>
+                    <th>On-Sale Date</th>
+                    <th>Printing</th>
+                    <th>Cover No./Letter</th>
+                    <th>Issue Comment</th>
+                    <th>Own (P)</th>
+                    <th>Own (D)</th>
+                    <th>Read?</th>
+                    <th>Collection Comment</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for issue in issues_list %}
+                    <tr>
+                        <!-- TODO: make the next <td> clickable -->
+                        <td><a href="{% url 'issue-detail' issue.id %}">{{ issue.publication }} #{{ issue.number.normalize }}</a></td>
+                        <td>{{ issue.on_sale_date|date:'o-m-d' }}</td>
+                        <td>{{ issue.printing }}</td>
+                        <td>{{ issue.cover }}</td><!-- TODO: make clickable for pop-up image of cover maybe? -->
+                        <td>{{ issue.issue_comment|default_if_none:"" }}</td>
+                        <td>{{ issue.own_physical|yesno:'Yes,No' }}</td>
+                        <td>{{ issue.own_digital|yesno:'Yes,No' }}</td>
+                        <td>{{ issue.have_read|yesno:'Yes,No' }}</td>
+                        <td>{{ issue.collection_comment|default_if_none:"" }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     {% else %}
         <p>You have no issues tracked, yet!</p>
     {% endif %}

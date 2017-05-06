@@ -1,0 +1,71 @@
+{% extends "ComicCollectionTracker/base.html" %}
+
+{% block title_addon %}Issue{% endblock %}
+
+{% block header %}Issue{% endblock %}
+
+{% block content %}
+    <h2>{{ issue_object.publication }} #{{ issue_object.number.normalize }}</h2>
+    <div class="span-12">
+        <table id="issue-detail-table">
+            <tr>
+                <th colspan="2">About This Issue</th>
+            </tr>
+            <tr>
+                <td>Publication</td>
+                <td>{{ issue_object.publication }}</td>
+            </tr>
+            <tr>
+                <td>Number</td>
+                <td>{{ issue_object.number.normalize }}</td>
+            </tr>
+            <tr>
+                <td>On Sale Date</td>
+                <td>{{ issue_object.on_sale_date|date:'o-m-d' }}</td>
+            </tr>
+            <tr>
+                <td>Cover</td>
+                <td>{{ issue_object.cover }}</td>
+            </tr>
+            <tr>
+                <td>Printing</td>
+                <td>{{ issue_object.printing }}</td>
+            </tr>
+            <tr>
+                <td>Issue Comment</td>
+                <td>{{ issue_object.issue_comment }}</td>
+            </tr>
+            <tr>
+                <th colspan="2">In Your Collection</th>
+            </tr>
+            <tr>
+                <td>Own Pysical?</td>
+                <td>{{ issue_object.own_physical }}</td>
+            </tr>
+            <tr>
+                <td>Own Digital?</td>
+                <td>{{ issue_object.own_digital }}</td>
+            </tr>
+            <tr>
+                <td>Have Read?</td>
+                <td>{{ issue_object.have_read }}</td>
+            </tr>
+            <tr>
+                <td>Collection Comment</td>
+                <td>{{ issue_object.collection_comment }}</td>
+            </tr>
+            <tr>
+                <th colspan="2">On Comicvine</th>
+            </tr>
+            <tr>
+                <td>Comicvine ID</td>
+                <td><a href="{{ issue_object.comicvine_url }}">{{ issue_object.comicvine_id }}</a></td>
+            </tr>
+        </table>
+        <p><a href="{% url 'collection-index' %}">Back to your collection</a></p>
+    </div>
+    <div id="issue-img-container" class="span-12 last">
+        <img src="{{ issue_object.cover_url }}" alt="Cover image" />
+        <p>Note: Only one cover image is available from Comicvine--typically the first cover of the first printing.</p>
+    </div>
+{% endblock %}

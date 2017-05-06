@@ -4,18 +4,22 @@
 <head>
 
     <!-- Blueprint CSS libraries -->
-    <link rel="stylesheet" href="{%  static "css/blueprint/screen.css" %}" type="text/css" media="screen, projection">
-    <link rel="stylesheet" href="{% static "css/blueprint/print.css" %}" type="text/css" media="print">
+    <link rel="stylesheet" href="{%  static "css/blueprint/screen.css" %}" type="text/css" media="screen, projection" />
+    <link rel="stylesheet" href="{% static "css/blueprint/print.css" %}" type="text/css" media="print" />
     <!--[if lt IE 8]>
-      <link rel="stylesheet" href="{% static "css/blueprint/ie.css" %}" type="text/css" media="screen, projection">
+      <link rel="stylesheet" href="{% static "css/blueprint/ie.css" %}" type="text/css" media="screen, projection" />
     <![endif]-->
 
-    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static "css/comics.css" %}" type="text/css" />
+
+    <meta charset="UTF-8" />
     <title>Comic Collection Tracker | {%  block title_addon %}{% endblock %}</title>
 </head>
 <body>
-<div style="float: right;">Logged in as {{ request.user.username }} | <a href="/logout/">Log out</a></div>
-<h1>{%  block header %}{% endblock %}</h1>
-{% block content %}{% endblock %}
+<div id="body-container" class="container">
+    <div style="float: right;">Logged in as {{ request.user.username }} | <a href="/logout/">Log out</a></div>
+    <h1>{%  block header %}{% endblock %}</h1>
+    {% block content %}{% endblock %}
+</div>
 </body>
 </html>
