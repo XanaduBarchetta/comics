@@ -2,20 +2,50 @@
 {% load static %}
 <html lang="en">
 <head>
+    <meta charset="utf-8">
 
-    <!-- Blueprint CSS libraries -->
-    <link rel="stylesheet" href="{%  static "css/blueprint/screen.css" %}" type="text/css" media="screen, projection">
-    <link rel="stylesheet" href="{% static "css/blueprint/print.css" %}" type="text/css" media="print">
-    <!--[if lt IE 8]>
-      <link rel="stylesheet" href="{% static "css/blueprint/ie.css" %}" type="text/css" media="screen, projection">
-    <![endif]-->
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{% static "font-awesome-4.7.0/css/font-awesome.min.css" %}" type="text/css" />
 
-    <meta charset="UTF-8">
+    <!-- jQuery sheets/scripts -->
+    <script type="text/javascript" src="{% static "javascript/jquery-3.2.1.min.js" %}"></script>
+    <link rel="stylesheet" href="{% static "css/jqueryui/jquery-ui.min.css" %}" type="text/css" />
+    <link rel="stylesheet" href="{% static "css/jqueryui/jquery-ui.theme.min.css" %}" type="text/css" />
+    <script type="text/javascript" src="{% static "javascript/jquery-ui.min.js" %}"></script>
+    <link rel="stylesheet" href="{% static "css/tablesorter/theme.blue.css" %}" type="text/css" />
+    <script type="text/javascript" src="{% static "javascript/jquery.tablesorter.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "javascript/jquery.tablesorter.widgets.min.js" %}"></script>
+
+    <!-- Foundation sheets/scripts -->
+    <link rel="stylesheet" href="{% static "css/foundation-flexbox.min.css" %}" type="text/css" />
+    <script type="text/javascript" src="{% static "javascript/foundation.min.js" %}"></script>
+
+    <!-- Custom sheets/scripts -->
+    <link rel="stylesheet" href="{% static "css/comics.css" %}" type="text/css" />
+    <script type="text/javascript">
+        $(document).foundation();
+    </script>
+    {% block head-extras %}{% endblock %}
+
     <title>Comic Collection Tracker | {%  block title_addon %}{% endblock %}</title>
 </head>
 <body>
-<div style="float: right;">Logged in as {{ request.user.username }} | <a href="/logout/">Log out</a></div>
-<h1>{%  block header %}{% endblock %}</h1>
-{% block content %}{% endblock %}
+<div id="body-container" class="row column">
+    <div style="float: right;">Logged in as {{ request.user.username }} | <a href="/logout/">Log out</a></div>
+    <h1>{%  block header %}{% endblock %}</h1>
+    {% if messages %}
+        <ul id="messages-list">
+            {% for message in messages %}
+                <li class="callout {{ message.tags }}" data-closable>
+                    <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    {{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    {% block content %}{% endblock %}
+</div>
+{% block extra-content %}{% endblock %}
 </body>
 </html>

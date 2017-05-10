@@ -9,6 +9,10 @@ class ComicvineIssueForm(forms.Form):
     comicvine_id = forms.IntegerField(label='Comicvine ID: 4000-', label_suffix='')
 
 
+# class ComicvineSeriesForm(forms.Form):
+#     comicvine_id = forms.IntegerField(label='Comicvine ID: 4050-', label_suffix='')
+
+
 class IssueAddForm(forms.ModelForm):
     class Meta:
         model = Issue

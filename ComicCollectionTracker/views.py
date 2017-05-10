@@ -1,4 +1,5 @@
 # Python libraries
+from __future__ import print_function
 import urllib2
 import json
 import logging
@@ -8,12 +9,13 @@ import utils
 
 # Django libraries
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, UpdateView, DeleteView
 from django.views import View
 
 # Models and forms
@@ -38,11 +40,35 @@ class IssueListView(ListView):
 
 @method_decorator(login_required, name='dispatch')
 class IssueDetailView(DetailView):
-    template_name = 'ComicCollectionTracker/issue.html'
+    template_name = 'ComicCollectionTracker/issue_detail.html'
     context_object_name = 'issue_object'
+    model = Issue
 
     def get_queryset(self):
-        return Issue.objects.get(user=self.request.user)
+        queryset = super(IssueDetailView, self).get_queryset()
+        # Filter the queryset to make sure the requested Issue actually belongs to the requesting User
+        return queryset.filter(user=self.request.user)
+
+
+@method_decorator(login_required, name='dispatch')
+class IssueDeleteView(DeleteView):
+    model = Issue
+    success_url = reverse_lazy('collection-index')
+
+    def get_queryset(self):
+        queryset = super(IssueDeleteView, self).get_queryset()
+        # Filter the queryset to make sure the requested Issue actually belongs to the requesting User
+        return queryset.filter(user=self.request.user)
+
+    def delete(self, request, *args, **kwargs):
+        try:
+            self.object = self.get_object()
+        except Http404:
+            messages.error(self.request, "The selected issue does not exist or it belongs to another user.")
+            return HttpResponseRedirect(self.request.POST['next'])
+        success_url = self.get_success_url()
+        self.object.delete()
+        return HttpResponseRedirect(success_url)
 
 
 @method_decorator(login_required, name='dispatch')
@@ -51,6 +77,8 @@ class ComicvineIssueView(View):
     def get(self, request):
         comicvine_id = request.GET.get('comicvine_id', '0')
         url = utils.get_comicvine_issue_url(comicvine_id)
+        logger = logging.getLogger(settings.LOGGER_NAME)
+        logger.info("Making API call to url [" + url + "]")
         comicvine_content = urllib2.urlopen(url)
         comic_data = json.loads(comicvine_content.read())
         comicvine_content.close()
@@ -64,7 +92,7 @@ class ComicvineIssueView(View):
             'comicvine_url': comic_data['results']['site_detail_url'],
             'publication': comic_data['results']['volume']['name'],
             'number': comic_data['results']['issue_number'],
-            'cover_url': comic_data['results']['image']['super_url'],
+            'cover_url': comic_data['results']['image']['small_url'],
             'on_sale_date': comic_data['results']['store_date'],
         })
 
