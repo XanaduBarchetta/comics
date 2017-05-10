@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 
 import os
 
+from django.contrib.messages import constants as messages
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -135,6 +137,19 @@ COMICVINE_API_ISSUE_FILTERS = [
     'image',            # maps to Issue.cover_url
     'store_date',       # maps to Issue.on_sale_date
 ]
+# COMICVINE_API_VOLUME_URL = COMICVINE_API_URL + 'volume/4050-'
+# COMICVINE_API_VOLUME_FILTERS = [
+#
+# ]
+
+# Extend message tags to match Foundation framework callout classes
+MESSAGE_TAGS = {
+    messages.DEBUG: 'secondary',
+    messages.INFO: 'primary',
+    # messages.SUCCESS already matches callout class
+    # messages.WARNING already matches callout class
+    messages.ERROR: 'alert',
+}
 
 # Log settings
 LOGGING = {

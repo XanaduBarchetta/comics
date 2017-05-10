@@ -1,71 +1,127 @@
 {% extends "ComicCollectionTracker/base.html" %}
 
+{% block head-extras %}
+<script type="text/javascript">
+$(function() {
+    // Make the trash button clickable
+    $("#delete-issue-button").click(function () {
+        $("#confirm-delete-dialog").dialog("open");
+    });
+
+    // Initialize dialog window
+    $("#confirm-delete-dialog").dialog({
+        autoOpen: false,
+        resizable: false,
+        height: "auto",
+        width: "auto",
+        modal: true,
+        buttons: {
+            "Delete": function() {
+                $("#delete-issue-form").submit();
+            },
+            "Cancel": function() {
+                $(this).dialog("close");
+            }
+        }
+    });
+});
+</script>
+{% endblock %}
+
 {% block title_addon %}Issue{% endblock %}
 
 {% block header %}Issue{% endblock %}
 
 {% block content %}
-    <h2>{{ issue_object.publication }} #{{ issue_object.number.normalize }}</h2>
-    <div class="span-12">
-        <table id="issue-detail-table">
-            <tr>
-                <th colspan="2">About This Issue</th>
-            </tr>
-            <tr>
-                <td>Publication</td>
-                <td>{{ issue_object.publication }}</td>
-            </tr>
-            <tr>
-                <td>Number</td>
-                <td>{{ issue_object.number.normalize }}</td>
-            </tr>
-            <tr>
-                <td>On Sale Date</td>
-                <td>{{ issue_object.on_sale_date|date:'o-m-d' }}</td>
-            </tr>
-            <tr>
-                <td>Cover</td>
-                <td>{{ issue_object.cover }}</td>
-            </tr>
-            <tr>
-                <td>Printing</td>
-                <td>{{ issue_object.printing }}</td>
-            </tr>
-            <tr>
-                <td>Issue Comment</td>
-                <td>{{ issue_object.issue_comment }}</td>
-            </tr>
-            <tr>
-                <th colspan="2">In Your Collection</th>
-            </tr>
-            <tr>
-                <td>Own Pysical?</td>
-                <td>{{ issue_object.own_physical }}</td>
-            </tr>
-            <tr>
-                <td>Own Digital?</td>
-                <td>{{ issue_object.own_digital }}</td>
-            </tr>
-            <tr>
-                <td>Have Read?</td>
-                <td>{{ issue_object.have_read }}</td>
-            </tr>
-            <tr>
-                <td>Collection Comment</td>
-                <td>{{ issue_object.collection_comment }}</td>
-            </tr>
-            <tr>
-                <th colspan="2">On Comicvine</th>
-            </tr>
-            <tr>
-                <td>Comicvine ID</td>
-                <td><a href="{{ issue_object.comicvine_url }}">{{ issue_object.comicvine_id }}</a></td>
-            </tr>
-        </table>
-        <p><a href="{% url 'collection-index' %}">Back to your collection</a></p>
+    <div class="row">
+        <div class="columns medium-8">
+            <div class="row">
+                <div class="columns small-9"><h2>{{ issue_object.publication }} #{{ issue_object.number.normalize }}</h2></div>
+                <div id="issue-detail-actions" class="columns small-3 align-right">
+                    <span id="edit-issue-button" class="fa fa-edit fa-2x fa-border"></span>
+                    <span id="delete-issue-button" class="fa fa-trash fa-2x fa-border"></span>
+                </div>
+            </div>
+
+            <table id="issue-detail-table">
+                <tr>
+                    <th colspan="2">About This Issue</th>
+                </tr>
+                <tr>
+                    <td>Publication</td>
+                    <td>{{ issue_object.publication }}</td>
+                </tr>
+                <tr>
+                    <td>Number</td>
+                    <td>{{ issue_object.number.normalize }}</td>
+                </tr>
+                <tr>
+                    <td>On Sale Date</td>
+                    <td>{{ issue_object.on_sale_date|date:'M j, Y' }}</td>
+                </tr>
+                <tr>
+                    <td>Cover</td>
+                    <td>{{ issue_object.cover }}</td>
+                </tr>
+                <tr>
+                    <td>Printing</td>
+                    <td>{{ issue_object.printing }}</td>
+                </tr>
+                <tr>
+                    <td>Issue Comment</td>
+                    <td>{{ issue_object.issue_comment }}</td>
+                </tr>
+                <tr>
+                    <th colspan="2">In Your Collection</th>
+                </tr>
+                <tr>
+                    <td>Own Pysical?</td>
+                    <td>{{ issue_object.own_physical|yesno:"Yes,No" }}</td>
+                </tr>
+                <tr>
+                    <td>Own Digital?</td>
+                    <td>{{ issue_object.own_digital|yesno:"Yes,No" }}</td>
+                </tr>
+                <tr>
+                    <td>Have Read?</td>
+                    <td>{{ issue_object.have_read|yesno:"Yes,No" }}</td>
+                </tr>
+                <tr>
+                    <td>Collection Comment</td>
+                    <td>{{ issue_object.collection_comment }}</td>
+                </tr>
+                <tr>
+                    <th colspan="2">On Comicvine</th>
+                </tr>
+                <tr>
+                    <td>Comicvine ID</td>
+                    <td><a href="{{ issue_object.comicvine_url }}">{{ issue_object.comicvine_id }}</a></td>
+                </tr>
+            </table>
+            <p><a href="{% url 'collection-index' %}">Back to your collection</a></p>
+        </div>
+        <div id="issue-img-container" class="columns medium-4">
+            <img src="{{ issue_object.cover_url }}" alt="Cover image" />
+            <p>Note: Only one cover image is available from Comicvine--typically the first cover of the first printing.</p>
+        </div>
     </div>
-    <div id="issue-img-container" class="span-12 last">
-        <img src="{{ issue_object.cover_url }}" alt="Cover image" />
-        <p>Note: Only one cover image is available from Comicvine--typically the first cover of the first printing.</p>
+
+{% endblock %}
+
+{% block extra-content %}
+
+<!-- Pop-up windows -->
+<div id="confirm-delete-dialog" title="Delete Issue From Collection" class="popup">
+    <div class="row align-middle">
+        <div class="columns small-1"><span class="fa fa-exclamation-triangle"></span></div>
+        <div class="columns small-11"><span>Are you sure you want to delete this issue from your collection?<br />
+            This action cannot be undone.</span></div>
+        <form id="delete-issue-form" action="{% url 'delete-issue' issue_object.id %}" method="post">
+            {% csrf_token %}
+            {# Return to this page if errors occur while attempting to delete this Issue #}
+            <input type="hidden" name="next" value="{% url 'issue-detail' issue_object.id %}" />
+        </form>
     </div>
+</div>
+
 {% endblock %}

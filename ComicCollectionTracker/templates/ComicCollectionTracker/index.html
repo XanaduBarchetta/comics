@@ -1,25 +1,53 @@
 {% extends "ComicCollectionTracker/base.html" %}
 
+{% block head-extras %}
+<script type="text/javascript">
+$(function(){
+    // Initialize the tablesorter
+    $("#issues-table").tablesorter();
+
+    // Initialize dialog window
+    $("#add-issue-dialog").dialog({
+        autoOpen: false,
+        resizable: true,
+        modal: true,
+        buttons: {
+            "Find Issue": function() {
+                $("#add-issue-dialog-form").submit();
+            },
+            "Cancel": function() {
+                $(this).dialog("close");
+            }
+        }
+    });
+
+    // Make buttons clickable
+    $("#add-issue-button").click(function() {
+        $("#add-issue-dialog").dialog("open");
+    });
+});
+</script>
+{% endblock %}
+
 {% block title_addon %}Home{% endblock %}
 
 {% block header %}Home{% endblock %}
 
 {% block content %}
     <p>Hello, {{ request.user.first_name }}!</p>
-    <ul>
-        <li><form action="{% url 'add-issue' %}" method="get">
-            {{ form_issue }}
-            <input type="submit" value="Add New Issue" />
-        </form></li>
+    <div class="button-group stacked-for-small">
+        <a id="add-issue-button" class="button">Add an Individual Issue</a>
+        <a id="add-series-button" class="button">Add Issues From a Series</a>
+    </div>
 {#        <li><form action="publication/add/" method="get">#}
 {#            {{ form_publication }}#}
 {#            <input type="submit" value="Add All From Publication" />#}
 {#        </form></li>#}
-    </ul>
     {% if issues_list %}
-        <table>
+        <table id="issues-table" class="tablesorter-blue">
             <thead>
                 <tr>
+                    <!-- TODO: Add checkboxes for row selection -->
                     <th>Issue</th>
                     <th>On-Sale Date</th>
                     <th>Printing</th>
@@ -33,10 +61,10 @@
             </thead>
             <tbody>
                 {% for issue in issues_list %}
-                    <tr>
+                    <tr id="issue-tr-{{ issue.id }}">
                         <!-- TODO: make the next <td> clickable -->
                         <td><a href="{% url 'issue-detail' issue.id %}">{{ issue.publication }} #{{ issue.number.normalize }}</a></td>
-                        <td>{{ issue.on_sale_date|date:'o-m-d' }}</td>
+                        <td>{{ issue.on_sale_date|date:'Y-m-d' }}</td>
                         <td>{{ issue.printing }}</td>
                         <td>{{ issue.cover }}</td><!-- TODO: make clickable for pop-up image of cover maybe? -->
                         <td>{{ issue.issue_comment|default_if_none:"" }}</td>
@@ -51,4 +79,22 @@
     {% else %}
         <p>You have no issues tracked, yet!</p>
     {% endif %}
+{% endblock %}
+
+{% block extra-content %}
+
+<!-- Pop-up windows -->
+<div id="add-issue-dialog" title="Add Issue by Comicvine ID" class="popup">
+    <div class="row">
+        <div class="columns medium-12">
+            <form id="add-issue-dialog-form" action="{% url 'add-issue' %}" method="get">
+                <div class="input-group">
+                    {# TODO: fix the vertical alignment on the label and input #}
+                    {{ form_issue }}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 {% endblock %}

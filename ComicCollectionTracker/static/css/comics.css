@@ -1,6 +1,44 @@
+/* Global styles */
+
+html {
+    /* override site-wide default so that we can manipulate font sizes more easily elsewhere */
+    font-size: 16px;
+}
+
+h1, h2, p, th {
+    /* TODO: come up with a better font-family?
+    font-family: Verdana, Geneva, sans-serif;
+     */
+}
+
+label {
+    white-space: nowrap;
+}
+
+ul#messages-list {
+    list-style: none;
+    margin-left: 0px;
+}
+
+.popup {
+    /* Prevent popup windows from displaying even for a brief moment during page load */
+    display: none;
+}
+
+/* index.html */
+
+table#issues-table {
+    font-size: 12px;
+}
+
 /* issue_detail.html */
 
 table#issue-detail-table tr th {
     text-align: center;
     background-color: lightsteelblue;
+}
+
+#delete-issue-button {
+    color: red;
+    cursor: pointer;
 }

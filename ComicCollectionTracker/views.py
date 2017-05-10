@@ -1,4 +1,5 @@
 # Python libraries
+from __future__ import print_function
 import urllib2
 import json
 import logging
@@ -8,12 +9,13 @@ import utils
 
 # Django libraries
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, UpdateView, DeleteView
 from django.views import View
 
 # Models and forms
@@ -46,6 +48,27 @@ class IssueDetailView(DetailView):
         queryset = super(IssueDetailView, self).get_queryset()
         # Filter the queryset to make sure the requested Issue actually belongs to the requesting User
         return queryset.filter(user=self.request.user)
+
+
+@method_decorator(login_required, name='dispatch')
+class IssueDeleteView(DeleteView):
+    model = Issue
+    success_url = reverse_lazy('collection-index')
+
+    def get_queryset(self):
+        queryset = super(IssueDeleteView, self).get_queryset()
+        # Filter the queryset to make sure the requested Issue actually belongs to the requesting User
+        return queryset.filter(user=self.request.user)
+
+    def delete(self, request, *args, **kwargs):
+        try:
+            self.object = self.get_object()
+        except Http404:
+            messages.error(self.request, "The selected issue does not exist or it belongs to another user.")
+            return HttpResponseRedirect(self.request.POST['next'])
+        success_url = self.get_success_url()
+        self.object.delete()
+        return HttpResponseRedirect(success_url)
 
 
 @method_decorator(login_required, name='dispatch')
